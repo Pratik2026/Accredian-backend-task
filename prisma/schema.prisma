@@ -1,0 +1,28 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Course {
+  id         Int       @id @default(autoincrement())
+  name       String
+  referrerBonus Float
+  refereeBonus  Float
+  referrals  Referral[] @relation("CourseReferrals")
+  createdAt  DateTime  @default(now())
+}
+
+model Referral {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String
+  referredBy String
+  message    String?
+  courseId   Int
+  course     Course   @relation(fields: [courseId], references: [id], name: "CourseReferrals")
+  createdAt  DateTime @default(now())
+}
